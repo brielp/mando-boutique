@@ -1,29 +1,46 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardBody, CardSubtitle, CardImg, CardTitle } from 'reactstrap';
+import { makeStyles } from '@material-ui/core/styles';
+import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
+
+const useStyles = makeStyles({
+	root: {
+		width: 350,
+		marginTop: 25
+	},
+	title: {
+		color: 'black'
+	}
+});
+
+function convertPriceString(price) {
+	let str = String(price);
+	if (str.length > 3) {
+		str = str.slice(0, str.length - 3) + ',' + str.slice(str.length - 3);
+	}
+	return '$' + str + '.00';
+}
 
 function MandoCard({ mandolin }) {
-	function convertPriceString(price) {
-		let str = String(price);
-		if (str.length > 3) {
-			str = str.slice(0, str.length - 3) + ',' + str.slice(str.length - 3);
-		}
-		return '$' + str + '.00';
-	}
+	const classes = useStyles();
 
 	return (
-		<Card>
-			<Link to={`/mandolins/${mandolin.sku}`}>
-				<CardImg height="200px" top src={mandolin.images[0]} alt="Card image cap" />
+		<Card className={classes.root}>
+			<Link to={`/mandolins/${mandolin.sku}`} style={{ textDecoration: 'none' }}>
+				<CardMedia
+					component="img"
+					alt={mandolin.title}
+					height="400"
+					image={mandolin.images[0]}
+					title={mandolin.sku}
+				/>
+				<CardContent>
+					<Typography className={classes.title} variant="h6" component="h4">
+						{mandolin.title}
+					</Typography>
+					<Typography color="textSecondary">{convertPriceString(mandolin.price)}</Typography>
+				</CardContent>
 			</Link>
-			<CardBody>
-				<Link to={`/mandolins/${mandolin.sku}`}>
-					<CardTitle tag="h5">{mandolin.title}</CardTitle>
-				</Link>
-				<CardSubtitle tag="h6" className="mb-2 text-muted text-center">
-					{convertPriceString(mandolin.price)}
-				</CardSubtitle>
-			</CardBody>
 		</Card>
 	);
 }

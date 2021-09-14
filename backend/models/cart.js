@@ -13,7 +13,7 @@ class Cart {
 	// get cart items for a cart
 	static async getItems(cartId) {
 		const result = await db.query(
-			`SELECT c.cart_id, i.sku, i.title, i.price FROM cart_items AS c INNER JOIN items AS i ON c.item_sku = i.sku WHERE c.cart_id = $1`,
+			`SELECT c.cart_id, i.sku, i.title, i.price, i.images FROM cart_items AS c INNER JOIN items AS i ON c.item_sku = i.sku WHERE c.cart_id = $1`,
 			[ cartId ]
 		);
 		return result.rows;

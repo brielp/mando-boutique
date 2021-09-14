@@ -1,47 +1,62 @@
-import React, { useState } from 'react';
-import { Carousel, CarouselItem, CarouselControl, CarouselIndicators } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { makeStyles, ImageList, ImageListItem } from '@material-ui/core';
+
+const useStyles = makeStyles(() => {
+	return {
+		image: {
+			maxWidth: 300
+		},
+		root: {
+			display: 'flex',
+			flexWrap: 'wrap',
+			justifyContent: 'center',
+			overflow: 'hidden',
+			backgroundColor: 'white',
+			maxWidth: '60%',
+			minWidth: 600
+		},
+		imageList: {
+			flexWrap: 'nowrap',
+			// Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+			transform: 'translateZ(0)'
+		}
+	};
+});
 
 const MandoCarousel = ({ imgs }) => {
-	const [ activeIndex, setActiveIndex ] = useState(0);
-	const [ animating, setAnimating ] = useState(false);
+	const [ imageState, setImageState ] = useState([]);
+	const classes = useStyles();
 
-	const next = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === imgs.length - 1 ? 0 : activeIndex + 1;
-		setActiveIndex(nextIndex);
-	};
-
-	const previous = () => {
-		if (animating) return;
-		const nextIndex = activeIndex === 0 ? imgs.length - 1 : activeIndex - 1;
-		setActiveIndex(nextIndex);
-	};
-
-	const goToIndex = newIndex => {
-		if (animating) return;
-		setActiveIndex(newIndex);
-	};
-
-	let slides = [];
-	if (imgs) {
-		slides = imgs.map(item => {
-			return (
-				<CarouselItem onExiting={() => setAnimating(true)} onExited={() => setAnimating(false)} key={item.src}>
-					<img src={item} />
-				</CarouselItem>
-			);
-		});
-	} else {
-		return <h1>Hey</h1>;
-	}
+	useEffect(
+		() => {
+			setImageState(img => imgs);
+		},
+		[ imgs ]
+	);
+	let items;
+	imageState
+		? (items = imageState.map((img, idx) => {
+				return {
+					img: img,
+					title: 'mandolin' + idx
+				};
+			}))
+		: (items = []);
 
 	return (
-		<Carousel activeIndex={activeIndex} next={next} previous={previous}>
-			<CarouselIndicators items={imgs} activeIndex={activeIndex} onClickHandler={goToIndex} />
-			{slides}
-			<CarouselControl key={1} direction="prev" directionText="Previous" onClickHandler={previous} />
-			<CarouselControl key={2} direction="next" directionText="Next" onClickHandler={next} />
-		</Carousel>
+		<div className={classes.root}>
+			{items.length !== 1 ? (
+				<ImageList className={classes.imageList} cols={2.5} rowHeight={500}>
+					{items.map(item => (
+						<ImageListItem key={item.img}>
+							<img src={item.img} alt={item.title} />
+						</ImageListItem>
+					))}
+				</ImageList>
+			) : (
+				<img className={classes.image} src={items[0].img} alt={items[0].title} />
+			)}
+		</div>
 	);
 };
 

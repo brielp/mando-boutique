@@ -54,10 +54,8 @@ class MandoApi {
 	/** add item to cart */
 	static async addToCart(cartId, itemSku) {
 		// add items to cart
-		if (cartId != MandoApi.cartId) {
-			throw new Error('Bad request - carts do not align');
-		}
-		const res = await this.request(`carts/${MandoApi.cartId}/items/${itemSku}`, {}, 'post');
+
+		const res = await this.request(`carts/${cartId}/items/${itemSku}`, {}, 'post');
 		console.log(res.data);
 		// return cart id?
 		return res.data;

@@ -56,14 +56,6 @@ function App() {
 					<Route exact path="/cart">
 						<Cart cartId={cartId} />
 					</Route>
-					{/* 
-          
-          <Route exact path="/signup">
-            <SignupForm signup={signup}/>
-          </Route>
-          <Route exact path="/profile">
-            <ProfileForm user={userData} update={updateProfile}/>
-          </Route> */}
 				</Switch>
 			</BrowserRouter>
 		</div>
